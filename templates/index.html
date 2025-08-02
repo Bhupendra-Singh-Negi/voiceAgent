@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Frontend</title>
+</head>
+<body>
+    <h1 id="headline">Hello from Flask!</h1>
+    <button id="btn">Click Me</button>
+
+    <!-- Load script from /static folder -->
+    <script type="module" src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
