@@ -7,18 +7,19 @@
 </head>
 <body class="bg-zinc-700 h-screen m-0">
     <main class=" h-full flex justify-center items-center">
-        <section class="bg-linear-to-r/srgb from-indigo-500 to-teal-400 p-10 h-fit w-fit rounded-md space-y-3">
+        <section class="bg-linear-to-r/srgb from-indigo-500 to-teal-400 p-10 h-fit w-5xl rounded-md space-y-3">
 
-            <h1 id="headline" class="text-2xl font-bold text-white">Voice Agent</h1>
-            <textarea id="textInput" rows="4" cols="50" class="text-white w-full text-black p-2 rounded border-blue-300 border-2">Type your text here</textarea><br>
-            <button id="btn" class="bg-white text-indigo-600 px-4 py-2 rounded hover:bg-gray-100 transition">Generate Audio</button>
+            <h1 id="headline" class="text-5xl font-bold text-white">Voice Agent</h1>
+            <textarea id="textInput" rows="4" cols="50" class="text-white text-2xl w-full text-black p-2 rounded border-blue-300 border-2">Type your text here</textarea><br>
+            <button id="btn" class="bg-white text-2xl text-indigo-600 px-4 py-2 rounded hover:bg-gray-100 transition">Generate Audio</button>
+            <audio id="player" controls autoplay class="w-full"></audio>
             <p id="audioResult"></p>
-            <audio id="player" controls loop class="w-full"></audio>
             
         </section>
     </main>
 
     <!-- Load JavaScript -->
     <script src="{{ url_for('static', path='script.js') }}"></script>
+    
 </body>
 </html>
