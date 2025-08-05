@@ -10,7 +10,7 @@ import httpx
 # Load env
 load_dotenv()
 MURF_API_KEY = os.getenv("MURF_API_KEY")
-print("MURF_API_KEY:", MURF_API_KEY)
+# print("MURF_API_KEY:", MURF_API_KEY)
 
 # FastAPI app
 app = FastAPI()
