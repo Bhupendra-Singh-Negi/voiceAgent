@@ -41,6 +41,13 @@ const echoPlayer = document.getElementById("echoPlayer");
 
 startBtn.addEventListener("click", async () => {
     try {
+         const options = { mimeType: 'audio/webm;codecs=opus' };
+
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            alert("WebM/Opus not supported in this browser.");
+            return;
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
@@ -57,7 +64,28 @@ startBtn.addEventListener("click", async () => {
             echoPlayer.src = audioUrl;
             echoPlayer.classList.remove("hidden");
             echoPlayer.play();
+
+            // Upload to server
+            const uploadStatus = document.getElementById("uploadStatus");
+            uploadStatus.innerText = "Uploading...";
+
+            const formData = new FormData();
+            const filename = `recording-${Date.now()}.webm`;
+            formData.append("file", audioBlob, filename);
+
+            fetch("/upload-audio", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                uploadStatus.innerText = `✅ Uploaded: ${data.filename} (${data.size_kb} KB)`;
+            })
+            .catch(err => {
+                uploadStatus.innerText = "❌ Upload failed: " + err.message;
+            });
         };
+
 
         mediaRecorder.start();
          
@@ -72,6 +100,7 @@ startBtn.addEventListener("click", async () => {
 stopBtn.addEventListener("click", () => {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.stop();
+
         startBtn.classList.remove("opacity-70");
         startBtn.disabled = false;
         stopBtn.disabled = true;

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
 import httpx
+import shutil
 
 # Load env
 load_dotenv()
@@ -62,3 +63,16 @@ async def generate_audio(payload: TTSRequest):
             return JSONResponse(status_code=res.status_code, content={"error": res.text})
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+
+@app.post("/upload-audio")
+async def upload_audio(file: UploadFile = File(...)):
+    file_location = f"uploads/{file.filename}"
+
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return {
+        "filename": file.filename,
+        "content_type": file.content_type,
+        "size_kb": round(os.path.getsize(file_location) / 1024, 2)
+    }
