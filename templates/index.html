@@ -19,12 +19,15 @@
         <section class="bg-linear-to-r/srgb from-blue-400 to-indigo-500 p-10 h-fit w-5xl rounded-md space-y-3">
             <h1 class="text-5xl font-bold text-white mb-2">Echo Bot</h1>
             <div class="space-x-2">
-                <button id="startRecording" class="bg-green-500 hover:bg-green-600 rounded-lg text-2xl font-medium text-white px-4 py-2 rounded hover:bg-green-600 transition">Start Recording</button>
-                <button id="stopRecording" class="bg-red-500 hover:bg-red-600 rounded-lg text-2xl font-medium text-white px-4 py-2 rounded hover:bg-red-600 transition" disabled>Stop Recording</button>
+                <button id="startRecording" class="bg-green-500 hover:bg-green-600 active:bg-green-700 rounded-lg text-2xl font-medium text-white px-4 py-2 rounded hover:bg-green-600 transition">Start Recording</button>
+                <button id="stopRecording" class="bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-lg text-2xl font-medium text-white px-4 py-2 rounded hover:bg-red-600 transition" disabled>Stop Recording</button>
             </div>
             <p class="text-white text-2xl  mt-2">Playback:</p>
+            <div id="status" class="text-gray-600 mt-4">Waiting to upload...</div>
+            <div id="transcript" class="text-lg text-black mt-2 font-medium"></div>
             <audio id="echoPlayer" controls class="w-full mt-2 hidden"></audio>
             <p id="uploadStatus" class="text-white text-sm"></p>
+
 
         </section>
         </main>

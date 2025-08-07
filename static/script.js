@@ -80,6 +80,8 @@ startBtn.addEventListener("click", async () => {
             .then(res => res.json())
             .then(data => {
                 uploadStatus.innerText = `✅ Uploaded: ${data.filename} (${data.size_kb} KB)`;
+                uploadAndTranscribe(audioBlob);
+
             })
             .catch(err => {
                 uploadStatus.innerText = "❌ Upload failed: " + err.message;
@@ -89,7 +91,6 @@ startBtn.addEventListener("click", async () => {
 
         mediaRecorder.start();
          
-        startBtn.classList.add("opacity-70");
         startBtn.disabled = true;
         stopBtn.disabled = false;
     } catch (error) {
@@ -101,8 +102,56 @@ stopBtn.addEventListener("click", () => {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.stop();
 
-        startBtn.classList.remove("opacity-70");
         startBtn.disabled = false;
         stopBtn.disabled = true;
     }
 });
+
+// async function uploadAndTranscribe(blob) {
+//     const formData = new FormData();
+//     formData.append("file", blob, "audio.webm");
+
+//     const statusText = document.getElementById("status");
+//     const transcriptDiv = document.getElementById("transcript");
+
+//     statusText.innerText = "Uploading and transcribing...";
+
+//     try {
+//         const response = await fetch("http://127.0.0.1:8000/transcribe/file", {
+//             method: "POST",
+//             body: formData,
+//         });
+
+//         const data = await response.json();
+        
+//         statusText.innerText = "Transcription completed ✅";
+//         transcriptDiv.innerText = `Transcript: ${data.text}`;
+//     } catch (error) {
+//         console.error("Error:", error);
+//         statusText.innerText = "Error during transcription ❌";
+//     }
+// }
+
+const statusText = document.getElementById("status");
+const transcriptDiv = document.getElementById("transcript");
+
+async function uploadAndTranscribe(audioBlob) {
+  const formData = new FormData();
+  formData.append("file", audioBlob, "recorded_audio.wav");
+    console.log("Uploading blob:", audioBlob);
+
+  await fetch("/transcribe/file", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      statusText.innerText = "📝 Transcription complete!";
+      transcriptDiv.innerText = `Transcription: ${data.text}`;
+    })
+    .catch((err) => {
+      statusText.innerText = "Error during transcription ❌";
+      console.error(err);
+    });
+    
+}
