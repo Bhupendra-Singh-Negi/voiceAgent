@@ -81,6 +81,7 @@ startBtn.addEventListener("click", async () => {
             .then(data => {
                 uploadStatus.innerText = `✅ Uploaded: ${data.filename} (${data.size_kb} KB)`;
                 uploadAndTranscribe(audioBlob);
+                 sendAudio(audioBlob)
 
             })
             .catch(err => {
@@ -107,31 +108,6 @@ stopBtn.addEventListener("click", () => {
     }
 });
 
-// async function uploadAndTranscribe(blob) {
-//     const formData = new FormData();
-//     formData.append("file", blob, "audio.webm");
-
-//     const statusText = document.getElementById("status");
-//     const transcriptDiv = document.getElementById("transcript");
-
-//     statusText.innerText = "Uploading and transcribing...";
-
-//     try {
-//         const response = await fetch("http://127.0.0.1:8000/transcribe/file", {
-//             method: "POST",
-//             body: formData,
-//         });
-
-//         const data = await response.json();
-        
-//         statusText.innerText = "Transcription completed ✅";
-//         transcriptDiv.innerText = `Transcript: ${data.text}`;
-//     } catch (error) {
-//         console.error("Error:", error);
-//         statusText.innerText = "Error during transcription ❌";
-//     }
-// }
-
 const statusText = document.getElementById("status");
 const transcriptDiv = document.getElementById("transcript");
 
@@ -155,3 +131,26 @@ async function uploadAndTranscribe(audioBlob) {
     });
     
 }
+
+async function sendAudio(audioBlob) {
+    const formData = new FormData();
+    formData.append("audio_file", audioBlob, "recorded_audio.webm");
+
+    const res = await fetch("/tts/echo", {
+        method: "POST",
+        body: formData,
+    });
+
+    const data = await res.json();
+    const murfAudio = document.getElementById("murfAudio");
+
+    if (data.audio_url) {
+        murfAudio.src = data.audio_url;
+        murfAudio.classList.remove("hidden");
+        murfAudio.load();
+        murfAudio.play();
+    } else {
+        console.error("No audio_url received from backend", data);
+    }
+}
+

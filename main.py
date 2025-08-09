@@ -8,7 +8,7 @@ from pydantic import BaseModel
 import shutil
 from fastapi.middleware.cors import CORSMiddleware
 import assemblyai as aai
-from routes import generate_audio, transcribe_audio, upload_audio
+from routes import generate_audio, transcribe_audio, upload_audio, echo_audio, llm_query
 # Load env
 load_dotenv()
 MURF_API_KEY = os.getenv("MURF_API_KEY")
@@ -43,3 +43,5 @@ async def read_root(request: Request):
 app.include_router(generate_audio.router)
 app.include_router(upload_audio.router)
 app.include_router(transcribe_audio.router)
+app.include_router(echo_audio.router)
+app.include_router(llm_query.router)
